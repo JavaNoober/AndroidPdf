@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'bintray-release'
 
 android {
     compileSdkVersion 26
@@ -27,6 +28,16 @@ android {
         }
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
+    task javadoc(type: Javadoc) {
+        options.encoding = "utf-8"
+    }
+
+
+
 }
 
 dependencies {
@@ -37,4 +48,15 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation files('libs/itext5-itextpdf-5.5.12.jar')
     implementation 'com.zhy:okhttputils:2.6.2'
+}
+
+//添加
+publish {
+    artifactId = 'pdftools'
+    userOrg = rootProject.userOrg
+    groupId = rootProject.groupId
+    uploadName = rootProject.uploadName
+    publishVersion = rootProject.publishVersion
+    desc = rootProject.description
+    website = rootProject.website
 }

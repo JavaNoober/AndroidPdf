@@ -50,6 +50,7 @@ import org.vudroid.core.DecodeService;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import okhttp3.Call;
 
@@ -997,9 +998,13 @@ public class PDFView extends SurfaceView {
 	 * @param url
 	 * @return
 	 */
-	public Configurator fromUrl(String url, String destFileDir, String destFileName) {
+	public Configurator fromUrl(String url, String destFileDir, String destFileName, boolean needCache) {
 		File file = new File(destFileDir, destFileName);
-		return new Configurator(Uri.fromFile(file)).url(url).destFileDir(destFileDir).destFileName(destFileName).isFromWeb(true);
+		if(file.exists() && needCache){
+			return new Configurator(Uri.fromFile(file));
+		}else {
+			return new Configurator(Uri.fromFile(file)).url(url).destFileDir(destFileDir).destFileName(destFileName).isFromWeb(true);
+		}
 	}
 
 	private enum State {DEFAULT, LOADED, SHOWN}
@@ -1144,9 +1149,15 @@ public class PDFView extends SurfaceView {
 			if (isFromWeb) {
 				final ProgressDialog progressDialog = new ProgressDialog(getContext());
 				if(dialog == null){
-					progressDialog.setTitle("提示");
-					progressDialog.setMessage("PDF文件加载中");
+					try {
+						progressDialog.setTitle(new String("提示".getBytes("GBK"), "UTF-8"));
+						progressDialog.setMessage(new String("PDF文件加载中".getBytes("GBK"), "UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
 					progressDialog.show();
+				}else {
+					dialog.show();
 				}
 				OkHttpUtils.get().url(url).build().execute(new FileCallBack(destFileDir, destFileName) {
 					@Override

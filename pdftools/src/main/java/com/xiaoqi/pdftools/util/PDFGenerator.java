@@ -38,9 +38,7 @@ public class PDFGenerator {
 				}
 				document.newPage();
 				Image img = Image.getInstance(path);
-				//设置图片缩放到A4纸的大小
 				img.scaleToFit(PageSize.A4.getWidth() - BORDER_WIDTH * 2, PageSize.A4.getHeight() - BORDER_WIDTH * 2);
-				//设置图片的显示位置（居中）
 				img.setAbsolutePosition((PageSize.A4.getWidth() - img.getScaledWidth()) / 2, (PageSize.A4.getHeight() - img.getScaledHeight()) / 2);
 				document.add(img);
 			}
